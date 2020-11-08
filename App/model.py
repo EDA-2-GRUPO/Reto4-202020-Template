@@ -49,13 +49,15 @@ def newAnalyzer():
    components: Almacena la informacion de los componentes conectados
    paths: Estructura que almancena los caminos de costo minimo desde un
            vertice determinado a todos los otros vértices del grafo
+   Num: Almacena El numero de viajes
     """
     try:
         citibike = {
                     'stops': None,
                     'connections': None,
                     'components': None,
-                    'paths': None
+                    'paths': None,
+                    "num":0
                     }
 
         citibike['stops'] = m.newMap(numelements=14000,
@@ -121,10 +123,11 @@ def addConnection(analyzer, origin, destination, distance):
 def numSCC(graph,sta1,sta2):
     lista_final=lt.newList()
     sc = scc.KosarajuSCC(graph["connections"])
-    esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
     num_comp=scc.connectedComponents(sc)
+    if sta1!=None:
+     esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
+     lt.addLast(lista_final,esta)
     lt.addLast(lista_final,num_comp)
-    lt.addLast(lista_final,esta)
     return lista_final
 
 def sameCC(sc, station1, station2):

@@ -25,10 +25,12 @@
  """
 
 import config as cf
-from App import model
+# from App.view import information as inf
+from App import model 
 import csv
 import os
 from timeit import default_timer as dt
+
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 Existen algunas operaciones en las que se necesita invocar
@@ -63,8 +65,15 @@ def loadTrips(citibike):
             fin=dt()
             time=fin-ini
             temptot+=time
-            print("tiempo de ejecusionde"+filename,time)
-            print("tiempo total actual"+filename,temptot)
+            print("tiempo de ejecusion de "+filename+"es: ",time)
+            print("tiempo total actual de carga es de: ",temptot)
+            numedges = totalConnections(citibike)
+            numvertex = totalStops(citibike)
+            print("Numero de clusters", clusters(citibike,None,None))
+            print('Numero de vertices: ' + str(numvertex))
+            print('Numero de arcos: ' + str(numedges))
+            print("numero de viajes cargados: ",citibike["num"])
+            # inf(citibike)
     return citibike
 
 def loadServices(analyzer, servicesfile):
@@ -80,6 +89,7 @@ def loadServices(analyzer, servicesfile):
     input_file = csv.DictReader(open(servicesfile, encoding="utf-8"),
                                 delimiter=",")
     for service in input_file:
+        analyzer["num"]+=1
         model.addStopConnection(analyzer, service)
     return analyzer
 # ___________________________________________________

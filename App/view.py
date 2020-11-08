@@ -31,8 +31,8 @@ from App import controller
 from DISClib.ADT import stack
 import timeit 
 assert config
-
 from DISClib.DataStructures import listiterator as it 
+
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -56,21 +56,19 @@ def Printop3(list):
     while it.hasNext(iterador):
        dato_lista=it.next(iterador)
        print(dato_lista)
+def information(citibike):
+    numedges = controller.totalConnections(cont)
+    numvertex = controller.totalStops(cont)
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
 
 def optionTwo():
-    print("1 201801-1-citibike-tripdata.csv")
-    print("2 201801-2-citibike-tripdata.csv")
-    print("3 201801-3-citibike-tripdata.csv")
-    print("4 201801-4-citibike-tripdata.csv")
     print("\nCargando información de transporte de singapur ....")
-    controller.loadTrips(cont)
-    numedges = controller.totalConnections(cont)
-    numvertex = controller.totalStops(cont)
-    print('Numero de vertices: ' + str(numvertex))
-    print('Numero de arcos: ' + str(numedges))
+    controller.loadTrips(cont) 
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
