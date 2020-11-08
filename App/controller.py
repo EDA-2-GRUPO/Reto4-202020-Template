@@ -27,7 +27,8 @@
 import config as cf
 from App import model
 import csv
-
+import os
+from timeit import default_timer as dt
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 Existen algunas operaciones en las que se necesita invocar
@@ -53,10 +54,17 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 def loadTrips(citibike):
+    temptot= 0
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
+            ini=dt()
             loadServices(citibike, filename)
+            fin=dt()
+            time=fin-ini
+            temptot+=time
+            print("tiempo de ejecusionde"+filename,time)
+            print("tiempo total actual"+filename,temptot)
     return citibike
 
 def loadServices(analyzer, servicesfile):

@@ -29,8 +29,9 @@ import sys
 import config
 from App import controller
 from DISClib.ADT import stack
-import timeit
+import timeit 
 assert config
+
 from DISClib.DataStructures import listiterator as it 
 
 """
@@ -48,21 +49,24 @@ servicefile = '201801-1-citibike-tripdata.csv'
 initialStation = None
 recursionLimit = 20000
 # ___________________________________________________
-#  Printeos
+#  Printeos y organizacion
 # ___________________________________________________
 def Printop3(list):
     iterador=it.newIterator(list)
     while it.hasNext(iterador):
        dato_lista=it.next(iterador)
        print(dato_lista)
-       
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
 
 def optionTwo():
+    print("1 201801-1-citibike-tripdata.csv")
+    print("2 201801-2-citibike-tripdata.csv")
+    print("3 201801-3-citibike-tripdata.csv")
+    print("4 201801-4-citibike-tripdata.csv")
     print("\nCargando información de transporte de singapur ....")
-    controller.loadServices(cont, servicefile)
+    controller.loadTrips(cont)
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
     print('Numero de vertices: ' + str(numvertex))
@@ -106,10 +110,8 @@ while True:
         
 
     elif int(inputs[0]) == 4:
-        msg = "Estación Base: BusStopCode-ServiceNo (Ej: 75009-10): "
+        # msg = "Estación Base: BusStopCode-ServiceNo (Ej: 75009-10): "
         initialStation = input(msg)
-        
-        
 
     elif int(inputs[0]) == 5:
         destStation = input("Estación destino (Ej: 15151-10): ")
