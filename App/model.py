@@ -121,16 +121,23 @@ def addConnection(analyzer, origin, destination, distance):
 # Funciones de consulta
 # ==============================
 def numSCC(graph,sta1,sta2):
+    """"Entrega en una lista en primera posicion el numero de clusters 
+    y de segundas el bool de si las 2 estaciones estan en el mismo
+    cluster"""
     lista_final=lt.newList()
     sc = scc.KosarajuSCC(graph["connections"])
     num_comp=scc.connectedComponents(sc)
-    if sta1!=None:
+    if sta1!=None: # se aplica cuando se quiere solo sacar los componentes 
      esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
      lt.addLast(lista_final,esta)
     lt.addLast(lista_final,num_comp)
     return lista_final
 
 def sameCC(sc, station1, station2):
+    """Funcion encarga de retornar un bool,
+    con relacion a la pregunta de si dos 
+    estaciones estan o no en el mismo 
+    cluster """
     return scc.stronglyConnected(sc, station1, station2)
 
 def totalStops(analyzer):

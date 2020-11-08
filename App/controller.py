@@ -67,12 +67,6 @@ def loadTrips(citibike):
             temptot+=time
             print("tiempo de ejecusion de "+filename+"es: ",time)
             print("tiempo total actual de carga es de: ",temptot)
-            numedges = totalConnections(citibike)
-            numvertex = totalStops(citibike)
-            print("Numero de clusters", clusters(citibike,None,None))
-            print('Numero de vertices: ' + str(numvertex))
-            print('Numero de arcos: ' + str(numedges))
-            print("numero de viajes cargados: ",citibike["num"])
             # inf(citibike)
     return citibike
 

@@ -57,10 +57,13 @@ def Printop3(list):
        dato_lista=it.next(iterador)
        print(dato_lista)
 def information(citibike):
+    "Funcion para la info del grafo"
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
     print('Numero de vertices: ' + str(numvertex))
     print('Numero de arcos: ' + str(numedges))
+    print("Numero de clusters", controller.clusters(citibike,None,None))
+    print("numero de viajes cargados: ",citibike["num"])
     
 # ___________________________________________________
 #  Menu principal
