@@ -55,6 +55,7 @@ def Printop3(list):
     while it.hasNext(iterador):
        dato_lista=it.next(iterador)
        print(dato_lista)
+       
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
