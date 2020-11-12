@@ -32,6 +32,7 @@ from DISClib.ADT import stack
 import timeit 
 assert config
 from DISClib.DataStructures import listiterator as it 
+from time import perf_counter
 
 
 """
@@ -40,6 +41,7 @@ Presenta el menu de opciones  y  por cada seleccion
 hace la solicitud al controlador para ejecutar la
 operación seleccionada.
 """
+        
 
 # ___________________________________________________
 #  Variables
@@ -55,7 +57,12 @@ def Printop3(list):
     iterador=it.newIterator(list)
     while it.hasNext(iterador):
        dato_lista=it.next(iterador)
-       print(dato_lista)
+       if dato_lista == True:
+           print("si pertenecen al mismo clúster")
+       elif dato_lista == False:
+           print("no pertenecen al mismo clúster")
+       else:
+           print("hay un total de ",dato_lista," clusters")
 def information(citibike):
     "Funcion para la info del grafo"
     numedges = controller.totalConnections(cont)
@@ -71,26 +78,32 @@ def information(citibike):
 
 def optionTwo():
     print("\nCargando información de transporte de singapur ....")
+    t1 = perf_counter() 
     controller.loadTrips(cont) 
+    t2 = perf_counter()
+    print("tiempo de carga:", t2 - t1)
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
 def optionthree():
     estacion1=input("estacion1")
     estacion2=input("estacion2")
+    t1 = perf_counter() 
     bol_num=controller.clusters(cont,estacion1,estacion2)
+    t2 = perf_counter()
+    print("tiempo de carga:", t2 - t1)
     Printop3(bol_num)
 def printMenu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
     print("1- Inicializar Analizador")
-    print("2- Cargar información de buses de singapur")
-    print("3- Calcular componentes conectados")
-    print("4- Establecer estación base:")
-    print("5- Hay camino entre estacion base y estación: ")
-    print("6- Ruta de costo mínimo desde la estación base y estación: ")
-    print("7- Estación que sirve a mas rutas: ")
+    print("2- Cargar información")
+    print("3- Cantidad de clusters de Viajes")
+    print("4- N/A:")
+    print("5- N/A: ")
+    print("6- N/A: ")
+    print("7- N/A: ")
     print("0- Salir")
     print("*******************************************")
 while True:

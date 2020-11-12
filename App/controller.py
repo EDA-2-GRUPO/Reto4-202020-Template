@@ -65,8 +65,8 @@ def loadTrips(citibike):
             fin=dt()
             time=fin-ini
             temptot+=time
-            print("tiempo de ejecusion de "+filename+"es: ",time)
-            print("tiempo total actual de carga es de: ",temptot)
+            # print("tiempo de ejecusion de "+filename+"es: ",time)
+            # print("tiempo total actual de carga es de: ",temptot)
             # inf(citibike)
     return citibike
 
