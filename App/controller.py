@@ -67,8 +67,6 @@ def loadTrips(citibike):
             time=fin-ini
             temptot+=time
             w+=1
-    kosajaru=model.onlykosajaru(citibike)
-    citibike["css"]=kosajaru
     return citibike
 
 def loadServices(analyzer, servicesfile):

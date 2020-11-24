@@ -80,6 +80,8 @@ def optionTwo():
     print("\nCargando información de transporte de singapur ....")
     t1 = perf_counter() 
     controller.loadTrips(cont) 
+    num_caminos_con=controller.clusters(cont,None,None)
+    cont["css"]=num_caminos_con
     t2 = perf_counter()
     print("tiempo de carga:", t2 - t1)
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
@@ -100,7 +102,7 @@ def optionfour():
     tiempo_fin=input("ingrese tiempo final: ")
     station_id=input("ingrese la estacion de inicio: ")
     tiempo_de_demora=input("Cuanto se demora en analizar los alrededores?: ")
-    controller.funcion2(cont,scc,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
+    controller.funcion2(cont,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
 
 def optionSeven():
     latitud_1=input("ingrese la latitud 1: ")

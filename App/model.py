@@ -127,7 +127,6 @@ def numSCC(graph,sta1,sta2):
     cluster"""
     lista_final=lt.newList()
     sc = scc.KosarajuSCC(graph["connections"])
-    graph[""]
     num_comp=scc.connectedComponents(sc)
     if sta1!=None: # se aplica cuando se quiere solo sacar los componentes 
      esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
@@ -163,8 +162,7 @@ def calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Tota
                   funcion=calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
                   if funcion !=None: #actualiza la lista de caminos
                      lista_caminos=funcion
-              else:#5parte #si es mayor que el limite por arriba se elimina el arco de la lista de tiempo general y el tiempo de reconocimiento sumado con el vertice del camino
-                # lt.removeLast(camino,nextvertex)
+              else:#5parte #se elimina el tiempo de reconocimiento sumado con el vertice del camino
                 Total_camino-=Arco+tiempo_de_demora
       if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
           return lista_caminos #si si es la misma ya podemos retornar el resultado
