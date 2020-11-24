@@ -104,12 +104,16 @@ def clusters(graph,sta1,sta2):
     
     return model.numSCC(graph,sta1,sta2)
 def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
+    tiempo_de_demora=int(tiempo_de_demora)
+    mint=int(mint)
+    maxt=int(maxt)
     nextvertex=0
     lista_caminos=0
     Total_camino=0
     determinador=0
     camino=0
     scc=graph["scc"]
+    graph=graph["connections"]
     return model.calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino)
 def onlycosajaru(graph):
     return model.onlycosajaru(graph)

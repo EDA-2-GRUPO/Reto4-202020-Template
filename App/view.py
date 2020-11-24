@@ -33,6 +33,7 @@ import timeit
 assert config
 from DISClib.DataStructures import listiterator as it 
 from time import perf_counter
+from DISClib.ADT import list as lt
 
 
 """
@@ -102,7 +103,12 @@ def optionfour():
     tiempo_fin=input("ingrese tiempo final: ")
     station_id=input("ingrese la estacion de inicio: ")
     tiempo_de_demora=input("Cuanto se demora en analizar los alrededores?: ")
-    controller.funcion2(cont,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
+    lista_caminos=controller.funcion2(cont,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
+    print(lt.size(lista_caminos))
+    # iterador_lista=it.newIterator(lista_caminos)
+    # while it.hasNext(iterador_lista):
+    #     next=
+
 
 def optionSeven():
     latitud_1=input("ingrese la latitud 1: ")
@@ -136,6 +142,7 @@ while True:
     elif inputs[0] == "w":
         ncont= optionTwo(cont)
         cont["scc"]=ncont
+        print(ncont.keys())
         
         
 
