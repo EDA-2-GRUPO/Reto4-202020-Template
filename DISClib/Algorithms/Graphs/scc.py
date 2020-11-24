@@ -104,7 +104,6 @@ def sccCount(graph, scc, vert):
     except Exception as exp:
         error.reraise(exp, 'dfo:sccCount')
 
-
 def stronglyConnected(scc, verta, vertb):
     """
     Dados dos vértices, informa si están fuertemente conectados o no.
@@ -112,6 +111,7 @@ def stronglyConnected(scc, verta, vertb):
     try:
         scca = map.get(scc['idscc'], verta)['value']
         sccb = map.get(scc['idscc'], vertb)['value']
+        print(scc['idscc'])
         if scca == sccb:
             return True
         return False

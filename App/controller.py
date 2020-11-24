@@ -57,7 +57,9 @@ def init():
 # ___________________________________________________
 def loadTrips(citibike):
     temptot= 0
+    w=0
     for filename in os.listdir(cf.data_dir):
+    #   if w!=2:
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
             ini=dt()
@@ -68,6 +70,7 @@ def loadTrips(citibike):
             # print("tiempo de ejecusion de "+filename+"es: ",time)
             # print("tiempo total actual de carga es de: ",temptot)
             # inf(citibike)
+            w+=1
     return citibike
 
 def loadServices(analyzer, servicesfile):

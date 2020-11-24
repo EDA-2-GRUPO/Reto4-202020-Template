@@ -85,6 +85,7 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+
 def optionthree():
     estacion1=input("estacion1")
     estacion2=input("estacion2")
@@ -93,6 +94,17 @@ def optionthree():
     t2 = perf_counter()
     print("tiempo de carga:", t2 - t1)
     Printop3(bol_num)
+
+def optionfour():
+    tiempo_ini=input("ingrese tiempo inicial: ")
+    tiempo_fin=input("ingrese tiempo final: ")
+    station_id=input("ingrese la estacion de inicio: ")
+def optionSix():
+    latitud_1=input("ingrese la latitud 1: ")
+    longitud_1=input("ingrese longitud 1: ")
+    latitud_2=input("ingrese la latitud 2: ")
+    longitud_2=input("ingrese longitud 2: ")
+
 def printMenu():
     print("\n")
     print("*******************************************")
@@ -110,37 +122,38 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
 
-    if int(inputs[0]) == 1:
+    if inputs[0] == "q":
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
 
-    elif int(inputs[0]) == 2:
+    elif inputs[0] == "w":
         optionTwo()
         
 
-    elif int(inputs[0]) == 3:
+    elif int(inputs[0]) == 1:
         optionthree()
         
 
+    elif int(inputs[0]) == 2:
+        optionfour()
+
+
+    elif int(inputs[0]) == 3:
+        destStation = input("Estación destino (Ej: 15151-10): ")
+        
+        
+
     elif int(inputs[0]) == 4:
-        # msg = "Estación Base: BusStopCode-ServiceNo (Ej: 75009-10): "
-        initialStation = input(msg)
+        destStation = input("Estación destino (Ej: 15151-10): ")
+        
+        
 
     elif int(inputs[0]) == 5:
-        destStation = input("Estación destino (Ej: 15151-10): ")
-        
-        
-
-    elif int(inputs[0]) == 6:
-        destStation = input("Estación destino (Ej: 15151-10): ")
-        
-        
-
-    elif int(inputs[0]) == 7:
         
         print("Tiempo de ejecución: " + str(executiontime))
-
+    elif int(inputs[0]) == 6:
+        optionSix()
     else:
         sys.exit(0)
 sys.exit(0)

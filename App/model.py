@@ -109,13 +109,13 @@ def addStation(analyzer, stopid):
     except Exception as exp:
         error.reraise(exp, 'model:addstop')
 
-def addConnection(analyzer, origin, destination, distance):
+def addConnection(analyzer, origin, destination, duracion):
     """
     Adiciona un arco entre dos estaciones
     """
     edge = gr.getEdge(analyzer['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
+        gr.addEdge(analyzer['connections'], origin, destination, duracion)
     return analyzer
 # ==============================
 # Funciones de consulta
@@ -126,6 +126,7 @@ def numSCC(graph,sta1,sta2):
     cluster"""
     lista_final=lt.newList()
     sc = scc.KosarajuSCC(graph["connections"])
+    graph[""]
     num_comp=scc.connectedComponents(sc)
     if sta1!=None: # se aplica cuando se quiere solo sacar los componentes 
      esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
@@ -139,12 +140,60 @@ def sameCC(sc, station1, station2):
     estaciones estan o no en el mismo 
     cluster """
     return scc.stronglyConnected(sc, station1, station2)
+def calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador):
+    if determinador==False:
+     lista_caminos=lt.newList("ARRAY_LIST")
+     camino=lt.newList("ARRAY_LIST") 
+     newvertex= inicialvertex
+    else:
+     newvertex=nextvertex
+    if newvertex!=inicialvertex or (Total_camino==0):#1)parte, entrada y por ende no hay que retornar nada, pero se intenta asegurar 
+      lista_vertices=gr.adjacent(graph, newvertex)
+      #  if lista_vertices!=None: no es posible que pase
+      iterador_1=it.newIterator(lista_vertices) #iterador de la lista de vertices 
+      while it.hasNext(iterador_1):
+          nextvertex=it.next(iterador_1) #siguinte vertice 
+          if (scc.stronglyConnected(scc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
+              Arco=gr.getEdge(graph, newvertex)#en esta parte se toma el peso de arco y se suma a el tiempo general
+              Total_camino+=Arco #se suma el peso del arco al tiempo general
+              Total_camino+=tiempo_de_demora#esta variable sirve para poder poner le tiempo de demora de vista del entorno
+              if Total_camino <maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
+                  lt.addLast(camino, nextvertex)#si si esta en el rango se añade el vertice a el final de la lista de caminos, y se inicia el algoritmo recursivamente desde allí
+                  calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,min,maxt,tiempo_de_demora,True)
+                  ####poner la actualización de variables
+              else:#5parte #si es mayor que el limite por arriba se elimina el arco de la lista de tiempo general y el tiempo de reconocimiento sumado con el vertice del camino
+                 lt.removeLast(camino,nextvertex)
+                 Total_camino-=Arco
+                 Total_camino-=tiempo_de_demora
+                 return ()
+      if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
+          return lista_caminos #si si es la misma ya podemos retornar el resultado
+      lt.removeLast(camino)#7a #si no es igual a el vertice inicial se elimina el camino el arco y el tiempo de reconocimiento porque ya no se puede pasar por allí
+      Total_camino-=Arco
+      Total_camino-=tiempo_de_demora
+    # else: ##8a
+    #   lt.removeLast(camino) acompañante de la condicion imposible
+    #   Total_camino-=Arco
+    #   Total_camino-=tiempo_de_demora
+    else:#9a
+         if Total_camino>mint:#en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo 2)ya no hay más caminos por recorrer y por tanto se devolvio
+           lt.addLast(lista_caminos,camino)# y para eso toca poner el condicional
+         lt.removeLast(camino)
+         Total_camino-=Arco
+         Total_camino-=tiempo_de_demora
 
 def totalStops(analyzer):
+
     """
     Retorna el total de estaciones (vertices) del grafo
     """
     return gr.numVertices(analyzer['connections'])
+def marcado_YN(lista_marcados,vertex):
+    lis
+# def eliminar_actual(camino,Arco,tiempo_de_demora,Total_camino):
+#       lt.removeLast(camino)
+#       Total_camino-=Arco
+#       Total_camino-=tiempo_de_demora
 
 def totalConnections(analyzer):
     """
