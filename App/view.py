@@ -99,11 +99,15 @@ def optionfour():
     tiempo_ini=input("ingrese tiempo inicial: ")
     tiempo_fin=input("ingrese tiempo final: ")
     station_id=input("ingrese la estacion de inicio: ")
-def optionSix():
+    tiempo_de_demora=input("Cuanto se demora en analizar los alrededores?: ")
+    controller.funcion2(cont,scc,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
+
+def optionSeven():
     latitud_1=input("ingrese la latitud 1: ")
     longitud_1=input("ingrese longitud 1: ")
     latitud_2=input("ingrese la latitud 2: ")
     longitud_2=input("ingrese longitud 2: ")
+    
 
 def printMenu():
     print("\n")
@@ -153,7 +157,7 @@ while True:
         
         print("Tiempo de ejecución: " + str(executiontime))
     elif int(inputs[0]) == 6:
-        optionSix()
+        optionSeven()
     else:
         sys.exit(0)
 sys.exit(0)
