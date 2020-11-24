@@ -59,6 +59,7 @@ def loadTrips(citibike):
     temptot= 0
     w=0
     for filename in os.listdir(cf.data_dir):
+      if w!=2:
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
             ini=dt()
@@ -102,11 +103,13 @@ def totalConnections(analyzer):
 def clusters(graph,sta1,sta2):
     
     return model.numSCC(graph,sta1,sta2)
-def funcion2(graph,scc,inicialvertex,mint,maxt,tiempo_de_demora):
+def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
     nextvertex=0
     lista_caminos=0
     Total_camino=0
     determinador=0
     camino=0
-    scc=graph["css"]
+    scc=graph["scc"]
     return model.calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino)
+def onlycosajaru(graph):
+    return model.onlycosajaru(graph)

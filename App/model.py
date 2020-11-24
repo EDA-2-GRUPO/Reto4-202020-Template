@@ -58,7 +58,7 @@ def newAnalyzer():
                     'components': None,
                     'paths': None,
                     "num":0,
-                    "css":None
+                    "scc":None
                     }
 
         citibike['stops'] = m.newMap(numelements=14000,
@@ -110,13 +110,13 @@ def addStation(analyzer, stopid):
     except Exception as exp:
         error.reraise(exp, 'model:addstop')
 
-def addConnection(analyzer, origin, destination, duracion):
+def addConnection(analyzer, origin, destination, distance):
     """
     Adiciona un arco entre dos estaciones
     """
     edge = gr.getEdge(analyzer['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, duracion)
+        gr.addEdge(analyzer['connections'], origin, destination, distance)
     return analyzer
 # ==============================
 # Funciones de consulta
@@ -126,7 +126,7 @@ def numSCC(graph,sta1,sta2):
     y de segundas el bool de si las 2 estaciones estan en el mismo
     cluster"""
     lista_final=lt.newList()
-    sc = scc.KosarajuSCC(graph["connections"])
+    sc = graph["scc"]
     num_comp=scc.connectedComponents(sc)
     if sta1!=None: # se aplica cuando se quiere solo sacar los componentes 
      esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
@@ -140,62 +140,20 @@ def sameCC(sc, station1, station2):
     estaciones estan o no en el mismo 
     cluster """
     return scc.stronglyConnected(sc, station1, station2)
-def calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino):
-    if determinador==False:
-     lista_caminos=lt.newList("ARRAY_LIST")
-     camino=lt.newList("ARRAY_LIST") 
-     lt.addLast(camino)
-     newvertex= inicialvertex
-    else:
-     newvertex=nextvertex
-    lt.addLast(camino, newvertex)
-    if newvertex!=inicialvertex or (Total_camino==0):#1)parte, entrada y por ende no hay que retornar nada, pero se intenta asegurar 
-      lista_vertices=gr.adjacent(graph, newvertex)
-      iterador_1=it.newIterator(lista_vertices) #iterador de la lista de vertices 
-      while it.hasNext(iterador_1):
-          nextvertex=it.next(iterador_1) #siguinte vertice 
-          if (scc.stronglyConnected(scc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
-              Arco=gr.getEdge(graph, newvertex,nextvertex)#en esta parte se toma el peso de arco y se suma a el tiempo general
-              Total_camino+=Arco+tiempo_de_demora #se suma el peso del arco al tiempo general y tambien el tiempo de demora
-              if Total_camino <maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
-                  lt.addLast(camino,nextvertex)#si si esta en el rango se añade el vertice a el final de la lista de caminos, y se inicia el algoritmo recursivamente desde allí
-                  funcion=calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
-                  if funcion !=None: #actualiza la lista de caminos
-                     lista_caminos=funcion
-              else:#5parte #se elimina el tiempo de reconocimiento sumado con el vertice del camino
-                Total_camino-=Arco+tiempo_de_demora
-      if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
-          return lista_caminos #si si es la misma ya podemos retornar el resultado
-      return None
-    else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
-         Arco=gr.getEdge(graph, newvertex,nextvertex)
-         Total_camino+=Arco+tiempo_de_demora
-         if ((Total_camino>mint) and (Total_camino<maxt)):#dado que ya finalizo el camino  y sabemos que el Total no se pasa del limite max ahora dado que termino se comprueba si es menor que el min
-           datos=lt.newList()
-           lt.addLast(datos,camino)#si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
-           lt.addLast(datos,Total_camino)
-           lt.addLast(lista_caminos, datos)
-           return(lista_caminos)
-         return None
 
 def totalStops(analyzer):
-
     """
     Retorna el total de estaciones (vertices) del grafo
     """
     return gr.numVertices(analyzer['connections'])
-def onlykosajaru(graph):
-    return scc.KosarajuSCC(graph)
-# def eliminar_actual(camino,Arco,tiempo_de_demora,Total_camino):
-#       lt.removeLast(camino)
-#       Total_camino-=Arco
-#       Total_camino-=tiempo_de_demora
 
 def totalConnections(analyzer):
     """
     Retorna el total arcos del grafo
     """
     return gr.numEdges(analyzer['connections'])
+def onlycosajaru(graph):
+    return scc.KosarajuSCC(graph['connections'])
 # ==============================
 # Funciones Helper
 # ==============================

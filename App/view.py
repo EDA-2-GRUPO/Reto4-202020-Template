@@ -76,17 +76,17 @@ def information(citibike):
 #  Menu principal
 # ___________________________________________________
 
-def optionTwo():
+def optionTwo(cont):
     print("\nCargando información de transporte de singapur ....")
     t1 = perf_counter() 
     controller.loadTrips(cont) 
-    num_caminos_con=controller.clusters(cont,None,None)
-    cont["css"]=num_caminos_con
+    num_caminos_con=controller.onlycosajaru(cont)
     t2 = perf_counter()
     print("tiempo de carga:", t2 - t1)
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+    return num_caminos_con
 
 def optionthree():
     estacion1=input("estacion1")
@@ -115,10 +115,10 @@ def printMenu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
-    print("1- Inicializar Analizador")
-    print("2- Cargar información")
-    print("3- Cantidad de clusters de Viajes")
-    print("4- N/A:")
+    print("q- Inicializar Analizador")
+    print("w- Cargar información")
+    print("1- Cantidad de clusters de Viajes")
+    print("2- RQ2:")
     print("5- N/A: ")
     print("6- N/A: ")
     print("7- N/A: ")
@@ -134,7 +134,9 @@ while True:
         cont = controller.init()
 
     elif inputs[0] == "w":
-        optionTwo()
+        ncont= optionTwo(cont)
+        cont["scc"]=ncont
+        
         
 
     elif int(inputs[0]) == 1:
@@ -146,9 +148,7 @@ while True:
 
 
     elif int(inputs[0]) == 3:
-        destStation = input("Estación destino (Ej: 15151-10): ")
-        
-        
+        print("d")
 
     elif int(inputs[0]) == 4:
         destStation = input("Estación destino (Ej: 15151-10): ")
