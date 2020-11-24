@@ -108,7 +108,8 @@ def optionfour():
     # iterador_lista=it.newIterator(lista_caminos)
     # while it.hasNext(iterador_lista):
     #     next=
-
+def sapo():
+    return 0
 
 def optionSeven():
     latitud_1=input("ingrese la latitud 1: ")
@@ -142,10 +143,7 @@ while True:
     elif inputs[0] == "w":
         ncont= optionTwo(cont)
         cont["scc"]=ncont
-        print(ncont.keys())
-        
-        
-
+        print(ncont.keys())  
     elif int(inputs[0]) == 1:
         optionthree()
         
