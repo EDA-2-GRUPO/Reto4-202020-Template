@@ -149,38 +149,42 @@ def calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Tota
      newvertex=nextvertex
     if newvertex!=inicialvertex or (Total_camino==0):#1)parte, entrada y por ende no hay que retornar nada, pero se intenta asegurar 
       lista_vertices=gr.adjacent(graph, newvertex)
-      #  if lista_vertices!=None: no es posible que pase
       iterador_1=it.newIterator(lista_vertices) #iterador de la lista de vertices 
       while it.hasNext(iterador_1):
           nextvertex=it.next(iterador_1) #siguinte vertice 
           if (scc.stronglyConnected(scc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
-              Arco=gr.getEdge(graph, newvertex)#en esta parte se toma el peso de arco y se suma a el tiempo general
+              Arco=gr.getEdge(graph, newvertex,nextvertex)#en esta parte se toma el peso de arco y se suma a el tiempo general
               Total_camino+=Arco #se suma el peso del arco al tiempo general
               Total_camino+=tiempo_de_demora#esta variable sirve para poder poner le tiempo de demora de vista del entorno
               if Total_camino <maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
-                  lt.addLast(camino, nextvertex)#si si esta en el rango se añade el vertice a el final de la lista de caminos, y se inicia el algoritmo recursivamente desde allí
+                  lt.addLast(camino,nextvertex)#si si esta en el rango se añade el vertice a el final de la lista de caminos, y se inicia el algoritmo recursivamente desde allí
                   calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,min,maxt,tiempo_de_demora,True)
-                  ####poner la actualización de variables
+                  """####poner la actualización de variables"""
               else:#5parte #si es mayor que el limite por arriba se elimina el arco de la lista de tiempo general y el tiempo de reconocimiento sumado con el vertice del camino
-                 lt.removeLast(camino,nextvertex)
-                 Total_camino-=Arco
-                 Total_camino-=tiempo_de_demora
-                 return ()
+                #  lt.removeLast(camino,nextvertex)
+                #  Total_camino-=Arco
+                #  Total_camino-=tiempo_de_demora
+                 return None
       if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
           return lista_caminos #si si es la misma ya podemos retornar el resultado
-      lt.removeLast(camino)#7a #si no es igual a el vertice inicial se elimina el camino el arco y el tiempo de reconocimiento porque ya no se puede pasar por allí
-      Total_camino-=Arco
-      Total_camino-=tiempo_de_demora
-    # else: ##8a
-    #   lt.removeLast(camino) acompañante de la condicion imposible
+    #   lt.removeLast(camino)#7a #si no es igual a el vertice inicial se elimina el camino el arco y el tiempo de reconocimiento porque ya no se puede pasar por allí
     #   Total_camino-=Arco
     #   Total_camino-=tiempo_de_demora
-    else:#9a
-         if Total_camino>mint:#en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo 2)ya no hay más caminos por recorrer y por tanto se devolvio
-           lt.addLast(lista_caminos,camino)# y para eso toca poner el condicional
-         lt.removeLast(camino)
-         Total_camino-=Arco
-         Total_camino-=tiempo_de_demora
+      return None
+    else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
+         Arco=gr.getEdge(graph, newvertex,nextvertex)
+         Total_camino+=Arco 
+         Total_camino+=tiempo_de_demora
+         if ((Total_camino>mint) and (Total_camino<maxt)):#dado que ya finalizo el camino  y sabemos que el Total no se pasa del limite max ahora dado que termino se comprueba si es menor que el min
+           lt.addLast(lista_caminos,camino)#si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
+           lt.removeLast(camino) #hay dos posivilidades, la primera es que despues de añadir la suma no este en el intervalo y eso quiere decir que no se añade el camino por ende tenemos que cojer por otro lado
+           Total_camino-=Arco
+           Total_camino-=tiempo_de_demora
+           return(nextvertex, lista_caminos, Total_camino)
+        #  lt.removeLast(camino) #hay dos posivilidades, la primera es que despues de añadir la suma no este en el intervalo y eso quiere decir que no se añade el camino por ende tenemos que cojer por otro lado
+        #  Total_camino-=Arco
+        #  Total_camino-=tiempo_de_demora
+         return None
 
 def totalStops(analyzer):
 
