@@ -109,7 +109,6 @@ def optionfour():
     # while it.hasNext(iterador_lista):
     #     next=
 
-
 def optionSeven():
     latitud_1=input("ingrese la latitud 1: ")
     longitud_1=input("ingrese longitud 1: ")

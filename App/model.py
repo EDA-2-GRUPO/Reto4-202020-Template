@@ -137,8 +137,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
           if (scc.stronglyConnected(sc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
               Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
               Total_camino+=Arco+tiempo_de_demora #se suma el peso del arco al tiempo general y tambien el tiempo de demora
-              if Total_camino <maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
-                  lt.addLast(camino,nextvertex)#si si esta en el rango se añade el vertice a el final de la lista de caminos, y se inicia el algoritmo recursivamente desde allí
+              if Total_camino<=maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
                   funcion=calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
                   if funcion !=None: #actualiza la lista de caminos
                      lista_caminos=funcion
@@ -150,7 +149,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
     else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
          Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
          Total_camino+=Arco+tiempo_de_demora
-         if ((Total_camino>mint) and (Total_camino<maxt)):#dado que ya finalizo el camino  y sabemos que el Total no se pasa del limite max ahora dado que termino se comprueba si es menor que el min
+         if ((Total_camino>=mint) and (Total_camino<=maxt)):#dado que ya finalizo el camino  y sabemos que el Total no se pasa del limite max ahora dado que termino se comprueba si es menor que el min
            datos=lt.newList()
            lt.addLast(datos,camino)#si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
            lt.addLast(datos,Total_camino)
