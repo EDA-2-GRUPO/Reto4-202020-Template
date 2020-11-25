@@ -31,7 +31,6 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
-from DISClib.ADT import orderedmap as mo
 assert config
 
 """
@@ -51,7 +50,7 @@ def newAnalyzer():
    paths: Estructura que almancena los caminos de costo minimo desde un
            vertice determinado a todos los otros vértices del grafo
    Num: Almacena El numero de viajes
-   vertex: Mapa ordenado de los vertices segun lat y long
+   vertex: Mapa de los vertices segun lat y long
     """
     try:
         citibike = {
@@ -72,7 +71,9 @@ def newAnalyzer():
                                               directed=True,
                                               size=14000,
                                               comparefunction=compareStopIds)
-        citibike["vertex"] = mo.newMap()
+        citibike["vertex"] = m.newMap(numelements=10000, 
+                                       maptype="CHAINING", 
+                                       comparefunction=compareStopIds)
         return citibike
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -95,6 +96,9 @@ def addStopConnection(citibike, viaje):
         origin =viaje["start station id"]
         destination= viaje["end station id"]
         duration =int(viaje["tripduration"])
+        lat=float(viaje["start station longitude"])
+        longt=float(viaje["start station latitude"])
+        addmapvertex(citibike,origin,lat,longt)
         addStation(citibike, origin)
         addStation(citibike, destination)
         addConnection(citibike, origin, destination, duration)
@@ -102,6 +106,12 @@ def addStopConnection(citibike, viaje):
     except Exception as exp:
         error.reraise(exp, 'model:addStopConnection')
 
+def addmapvertex(analyzer,origin,latitud,longitud):
+    """
+    Adiciona el vertice con la latitud y longitud al mapa vertex
+    """
+    if not m.contains(analyzer["vertex"],origin):
+      m.put(analyzer["vertex"],origin,str(latitud)+","+str(longitud))
 
 def addStation(analyzer, stopid):
     """
@@ -172,7 +182,60 @@ def numSCC(graph,sta1,sta2):
      lt.addLast(lista_final,esta)
     lt.addLast(lista_final,num_comp)
     return lista_final
-
+def hallar_cercanos_a_dos(lista, map,lat1,long1,lat2,long2):
+    """
+    Halla para dos ubicaciones de lat y long el vetice más cercano
+    lista:lista de vertices
+    map:mapa de vertices
+    ll1:latitud y longitud 1
+    ll2:latitud y longitud 2
+    """
+    "////////////preparacion///////////////"
+    mas_cerca=m.newMap()
+    m.put(mas_cerca,"Resta1",100000)
+    m.put(mas_cerca,"Vertice1",0)
+    m.put(mas_cerca,"Resta2",100000)
+    m.put(mas_cerca, "Vertice2",0)
+    "////////termina_preparacion///////////"
+    ###Desarrollo###
+    iterador=it.newIterator(lista)
+    while it.hasNext(iterador):
+        nextvertex=it.next(iterador)
+        lat_long=m.get(nextvertex)
+        newvlat=cambiar_a_formato(lat_long,0)
+        newvlong=cambiar_a_formato(lat_long,1)
+        lista_M_m_la_1,lista_M_m_la_2=mayor(lat1,newvlat),mayor(lat2,newvlat)
+        lista_M_m_lo_1,lista_M_m_lo_2=mayor(long1,newvlong),mayor(lat2,newvlat)
+        minlat1,mayorlat1,minlat2,mayorlat2=lista_M_m_la_1[1],lista_M_m_la_1[0],lista_M_m_la_2[1],lista_M_m_la_2[0]
+        minlon1,mayorlon1,minlon2,mayorlon2=lista_M_m_lo_1[1],lista_M_m_lo_1[0],lista_M_m_lo_2[1],lista_M_m_lo_2[0]
+        Res1,Res2=(mayorlat1-minlat1)+(mayorlon1-minlon1),(mayorlat2-minlat2)+(mayorlon2-minlon2)
+        if Res1<m.get(mas_cerca,"Resta1"):
+            m.put(mas_cerca,"Resta1", Res1)
+            m.put(mas_cerca,"Vertice1", nextvertex)
+        if Res2<m.get(mas_cerca,"Resta2"):
+            m.put(mas_cerca,"Resta2", Res2)
+            m.put(mas_cerca,"Vertice2", nextvertex)
+    return mas_cerca
+def mayor(c1,c2):
+    if c1<=c2:
+        return (c2,c1)
+    if c1>c2:
+        return (c1,c2)
+def cambiar_a_formato(cambiar,parte):
+    inicial=cambiar.split(",")
+    return float(inicial[parte])
+def only_dijsktra(grafo,inicio,fin):
+    nuevo_grafo=djk.Dijkstra(grafo,inicio)
+    if djk.hasPathTo(nuevo_grafo,fin):
+        tiempo_de_demora=djk.distTo(nuevo_grafo,fin)
+        camino=djk.pathTo(nuevo_grafo,fin)
+        final=lt.newList("ARRAY_LIST")
+        lt.addLast(final,tiempo_de_demora)
+        lt.addLast(final,camino)
+        lt.addLast(final,inicio)
+        lt.addLast(final,fin)
+    else:
+        return None
 def sameCC(sc, station1, station2):
     """Funcion encarga de retornar un bool,
     con relacion a la pregunta de si dos 

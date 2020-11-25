@@ -109,11 +109,17 @@ def optionfour():
     # while it.hasNext(iterador_lista):
     #     next=
 
-def optionSeven():
-    latitud_1=input("ingrese la latitud 1: ")
-    longitud_1=input("ingrese longitud 1: ")
-    latitud_2=input("ingrese la latitud 2: ")
-    longitud_2=input("ingrese longitud 2: ")
+def optionSeven(cont):
+    lat_lon1=input("ingrese la latitud y lontgitud (separados por comas) 1 Ej:1000,-1000: ")
+    lat_lon2=input("ingrese la latitud y lontgitud (separados por comas) 1 Ej:1000,-1000: ")
+    terminado=controller.rq6(cont, lat_lon1, lat_lon2)
+    if type(terminado)!=str:
+        iterador=it.newIterator(terminado)
+        while it.hasNext(iterador):
+             nextr=it.next(iterador)
+             print(nextr)
+    else:
+        print(terminado)
     
 
 def printMenu():
@@ -142,9 +148,6 @@ while True:
         ncont= optionTwo(cont)
         cont["scc"]=ncont
         print(ncont.keys())
-        
-        
-
     elif int(inputs[0]) == 1:
         optionthree()
         
@@ -156,8 +159,8 @@ while True:
     elif int(inputs[0]) == 3:
         print("d")
 
-    elif int(inputs[0]) == 4:
-        destStation = input("Estación destino (Ej: 15151-10): ")
+    elif int(inputs[0]) == 6:
+        optionSeven(cont)
         
         
 
