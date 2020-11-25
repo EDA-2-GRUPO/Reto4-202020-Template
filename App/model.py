@@ -31,6 +31,7 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+from DISClib.ADT import orderedmap as mo
 assert config
 
 """
@@ -50,6 +51,7 @@ def newAnalyzer():
    paths: Estructura que almancena los caminos de costo minimo desde un
            vertice determinado a todos los otros vértices del grafo
    Num: Almacena El numero de viajes
+   vertex: Mapa ordenado de los vertices segun lat y long
     """
     try:
         citibike = {
@@ -58,7 +60,8 @@ def newAnalyzer():
                     'components': None,
                     'paths': None,
                     "num":0,
-                    "scc":None
+                    "scc":None,
+                    "vertex":None
                     }
 
         citibike['stops'] = m.newMap(numelements=14000,
@@ -69,6 +72,7 @@ def newAnalyzer():
                                               directed=True,
                                               size=14000,
                                               comparefunction=compareStopIds)
+        citibike["vertex"] = mo.newMap()
         return citibike
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -139,7 +143,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
               Total_camino+=Arco+tiempo_de_demora #se suma el peso del arco al tiempo general y tambien el tiempo de demora
               if Total_camino<=maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
                   funcion=calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
-                  if funcion !=None: #actualiza la lista de caminos
+                  if funcion!=None: #actualiza la lista de caminos
                      lista_caminos=funcion
               else:#5parte #se elimina el tiempo de reconocimiento sumado con el vertice del camino
                 Total_camino-=Arco+tiempo_de_demora
