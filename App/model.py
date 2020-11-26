@@ -159,7 +159,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
                 Total_camino-=Arco+tiempo_de_demora
       if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
           return lista_caminos #si si es la misma ya podemos retornar el resultado
-      return lista_caminos #####REVISAR CAMNBIOOOOO
+      return lista_caminos #####REVISAR CAMNBIOOOOO #Cambio correcto
     else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
          Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
          Total_camino+=Arco+tiempo_de_demora

@@ -113,7 +113,6 @@ def optionSeven(cont):
     lat_lon1=input("ingrese la latitud y lontgitud (separados por comas) 1 Ej:1000,-1000: ")
     lat_lon2=input("ingrese la latitud y lontgitud (separados por comas) 1 Ej:1000,-1000: ")
     terminado=controller.rq6(cont, lat_lon1, lat_lon2)
-    
     if terminado==None:
         print(terminado)
     else:
@@ -124,6 +123,7 @@ def optionSeven(cont):
               print(nextr)
           else:
                 iteradort=it.newIterator(nextr)
+                print("caamino")
                 while it.hasNext(iteradort): 
                     nextt=it.next(iteradort)
                     print(nextt)
