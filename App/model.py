@@ -63,9 +63,7 @@ def newAnalyzer():
                     "vertex":None
                     }
 
-        citibike['stops'] = m.newMap(numelements=14000,
-                                     maptype='PROBING',
-                                     comparefunction=compareStopIds)
+        citibike['stops'] = lt.newList("ARRAY_LIST")
 
         citibike['connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
@@ -112,6 +110,7 @@ def addmapvertex(analyzer,origin,latitud,longitud):
     """
     if not m.contains(analyzer["vertex"],origin):
       m.put(analyzer["vertex"],origin,str(latitud)+","+str(longitud))
+      lt.addLast(analyzer["stops"],origin)
 
 def addStation(analyzer, stopid):
     """
@@ -159,7 +158,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
                 Total_camino-=Arco+tiempo_de_demora
       if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
           return lista_caminos #si si es la misma ya podemos retornar el resultado
-      return None
+      return lista_caminos #####REVISAR CAMNBIOOOOO
     else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
          Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
          Total_camino+=Arco+tiempo_de_demora
@@ -191,7 +190,7 @@ def hallar_cercanos_a_dos(lista, map,lat1,long1,lat2,long2):
     ll2:latitud y longitud 2
     """
     "////////////preparacion///////////////"
-    mas_cerca=m.newMap()
+    mas_cerca=m.newMap(5,109345121,'CHAINING',0.5,compareStopIds)
     m.put(mas_cerca,"Resta1",100000)
     m.put(mas_cerca,"Vertice1",0)
     m.put(mas_cerca,"Resta2",100000)
@@ -201,7 +200,7 @@ def hallar_cercanos_a_dos(lista, map,lat1,long1,lat2,long2):
     iterador=it.newIterator(lista)
     while it.hasNext(iterador):
         nextvertex=it.next(iterador)
-        lat_long=m.get(nextvertex)
+        lat_long=m.get(map,nextvertex)["value"]
         newvlat=cambiar_a_formato(lat_long,0)
         newvlong=cambiar_a_formato(lat_long,1)
         lista_M_m_la_1,lista_M_m_la_2=mayor(lat1,newvlat),mayor(lat2,newvlat)
@@ -209,10 +208,10 @@ def hallar_cercanos_a_dos(lista, map,lat1,long1,lat2,long2):
         minlat1,mayorlat1,minlat2,mayorlat2=lista_M_m_la_1[1],lista_M_m_la_1[0],lista_M_m_la_2[1],lista_M_m_la_2[0]
         minlon1,mayorlon1,minlon2,mayorlon2=lista_M_m_lo_1[1],lista_M_m_lo_1[0],lista_M_m_lo_2[1],lista_M_m_lo_2[0]
         Res1,Res2=(mayorlat1-minlat1)+(mayorlon1-minlon1),(mayorlat2-minlat2)+(mayorlon2-minlon2)
-        if Res1<m.get(mas_cerca,"Resta1"):
+        if Res1<m.get(mas_cerca,"Resta1")["value"]:
             m.put(mas_cerca,"Resta1", Res1)
             m.put(mas_cerca,"Vertice1", nextvertex)
-        if Res2<m.get(mas_cerca,"Resta2"):
+        if Res2<m.get(mas_cerca,"Resta2")["value"]:
             m.put(mas_cerca,"Resta2", Res2)
             m.put(mas_cerca,"Vertice2", nextvertex)
     return mas_cerca
@@ -234,6 +233,7 @@ def only_dijsktra(grafo,inicio,fin):
         lt.addLast(final,camino)
         lt.addLast(final,inicio)
         lt.addLast(final,fin)
+        return final
     else:
         return None
 def sameCC(sc, station1, station2):

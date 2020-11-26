@@ -120,20 +120,16 @@ def onlycosajaru(graph):
     return model.onlycosajaru(graph)
 def rq6(analyzer,ll1, ll2):
     lista=analyzer["stops"]
-    iterador=it.newIterator(lista)
-    while it.hasNext(iterador):
-        nextvertex=it.next(iterador)
-        print(nextvertex)
-    grafo=analyzer["components"]
+    grafo=analyzer["connections"]
     map_vet_long_lat=analyzer["vertex"]
     lat1=model.cambiar_a_formato(ll1,0)
     long1=model.cambiar_a_formato(ll1,1)
     lat2=model.cambiar_a_formato(ll2,0)
     long2=model.cambiar_a_formato(ll2,1)
     mapa_mas_cercano=model.hallar_cercanos_a_dos(lista, map_vet_long_lat,lat1,long1,lat2,long2)
-    inicio=mapa_mas_cercano["Vertice1"]
-    final=mapa_mas_cercano["Vertice2"]
+    inicio=m.get(mapa_mas_cercano,"Vertice1")["value"]
+    final=m.get(mapa_mas_cercano,"Vertice2")["value"]
     lista_cami_tiempo_o_None=model.only_dijsktra(grafo,inicio,final)
-    if lista_cami_tiempo_o_None ==None:
+    if lista_cami_tiempo_o_None==None:
         lista_cami_tiempo_o_None= "no hay un camino a esa estacion"
     return lista_cami_tiempo_o_None

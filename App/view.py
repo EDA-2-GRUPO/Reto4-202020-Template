@@ -147,7 +147,6 @@ while True:
     elif inputs[0] == "w":
         ncont= optionTwo(cont)
         cont["scc"]=ncont
-        print(ncont.keys())
     elif int(inputs[0]) == 1:
         optionthree()
         
