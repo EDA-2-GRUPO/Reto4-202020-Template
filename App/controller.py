@@ -32,6 +32,7 @@ import os
 from timeit import default_timer as dt
 from DISClib.ADT import map as m
 from DISClib.DataStructures import listiterator as it
+from DISClib.ADT import list as lt
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 Existen algunas operaciones en las que se necesita invocar

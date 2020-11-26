@@ -94,8 +94,8 @@ def addStopConnection(citibike, viaje):
         origin =viaje["start station id"]
         destination= viaje["end station id"]
         duration =int(viaje["tripduration"])
-        lat=float(viaje["start station longitude"])
-        longt=float(viaje["start station latitude"])
+        lat=float(viaje["start station latitude"])
+        longt=float(viaje["start station longitude"])
         addmapvertex(citibike,origin,lat,longt)
         addStation(citibike, origin)
         addStation(citibike, destination)
@@ -111,6 +111,7 @@ def addmapvertex(analyzer,origin,latitud,longitud):
     if not m.contains(analyzer["vertex"],origin):
       m.put(analyzer["vertex"],origin,str(latitud)+","+str(longitud))
       lt.addLast(analyzer["stops"],origin)
+      return analyzer
 
 def addStation(analyzer, stopid):
     """
