@@ -136,10 +136,12 @@ def addConnection(analyzer, origin, destination, distance):
 # Funciones de consulta
 # ==============================
 def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino):
+    print(Total_camino)
     if determinador==False:
      lista_caminos=lt.newList("ARRAY_LIST")
      camino=lt.newList("ARRAY_LIST") 
      newvertex= inicialvertex
+     determinador =True
     else:
      newvertex=nextvertex
     lt.addLast(camino, newvertex)
@@ -149,9 +151,11 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
       while it.hasNext(iterador_1):
           nextvertex=it.next(iterador_1) #siguinte vertice 
           if (scc.stronglyConnected(sc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
+              print(inicialvertex, next)
+              print(inicialvertex==nextvertex)
               Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
               Total_camino+=Arco+tiempo_de_demora #se suma el peso del arco al tiempo general y tambien el tiempo de demora
-              if Total_camino<=maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el procesp
+              if Total_camino<=maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el proceso
                   funcion=calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
                   if funcion!=None: #actualiza la lista de caminos
                      lista_caminos=funcion
@@ -168,7 +172,7 @@ def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total
            lt.addLast(datos,camino)#si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
            lt.addLast(datos,Total_camino)
            lt.addLast(lista_caminos, datos)
-           return(lista_caminos)
+           return lista_caminos
          return None
 def numSCC(graph,sta1,sta2):
     """"Entrega en una lista en primera posicion el numero de clusters 
