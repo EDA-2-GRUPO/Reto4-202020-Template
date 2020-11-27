@@ -197,7 +197,7 @@ def indegree(graph, vertex):
     Raises:
         Exception
     """
-    if (graph['type'] == "ADJ_LIST"):
+    if graph['type'] == "ADJ_LIST":
         return alt.indegree(graph, vertex)
 
 

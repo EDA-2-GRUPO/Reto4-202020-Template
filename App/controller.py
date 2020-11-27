@@ -26,7 +26,7 @@
 
 import config as cf
 # from App.view import information as inf
-from App import model 
+from App import model
 import csv
 import os
 from timeit import default_timer as dt
@@ -38,6 +38,7 @@ el modelo varias veces o integrar varias de las respuestas
 del modelo en una sola respuesta.  Esta responsabilidad
 recae sobre el controlador.
 """
+
 
 # ___________________________________________________
 #  Inicializacion del catalogo
@@ -56,19 +57,20 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 def loadTrips(citibike):
-    temptot= 0
-    w=0
+    temptot = 0
+    w = 0
     for filename in os.listdir(cf.data_dir):
-      if w!=2:
-        if filename.endswith('.csv'):
-            print('Cargando archivo: ' + filename)
-            ini=dt()
-            loadServices(citibike, filename)
-            fin=dt()
-            time=fin-ini
-            temptot+=time
-            w+=1
+        if w != 2:
+            if filename.endswith('.csv'):
+                print('Cargando archivo: ' + filename)
+                ini = dt()
+                loadServices(citibike, filename)
+                fin = dt()
+                time = fin - ini
+                temptot += time
+                w += 1
     return citibike
+
 
 def loadServices(analyzer, servicesfile):
     """
@@ -83,9 +85,11 @@ def loadServices(analyzer, servicesfile):
     input_file = csv.DictReader(open(servicesfile, encoding="utf-8"),
                                 delimiter=",")
     for service in input_file:
-        analyzer["num"]+=1
+        analyzer["num"] += 1
         model.addStopConnection(analyzer, service)
     return analyzer
+
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
@@ -95,25 +99,32 @@ def totalStops(analyzer):
     """
     return model.totalStops(analyzer)
 
+
 def totalConnections(analyzer):
     """
     Total de enlaces entre las paradas
     """
     return model.totalConnections(analyzer)
-def clusters(graph,sta1,sta2):
-    
-    return model.numSCC(graph,sta1,sta2)
-def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
-    tiempo_de_demora=int(tiempo_de_demora)
-    mint=int(mint)
-    maxt=int(maxt)
-    nextvertex=0
-    lista_caminos=0
-    Total_camino=0
-    determinador=0
-    camino=0
-    scc=graph["scc"]
-    graph=graph["connections"]
-    return model.calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino)
+
+
+def clusters(graph, sta1, sta2):
+    return model.numSCC(graph, sta1, sta2)
+
+
+def funcion2(graph, inicialvertex, mint, maxt, tiempo_de_demora):
+    tiempo_de_demora = int(tiempo_de_demora)
+    mint = int(mint)
+    maxt = int(maxt)
+    nextvertex = 0
+    lista_caminos = 0
+    Total_camino = 0
+    determinador = 0
+    camino = 0
+    scc = graph["scc"]
+    graph = graph["connections"]
+    return model.calcular_los_ciclos(graph, scc, inicialvertex, nextvertex, lista_caminos, Total_camino, mint, maxt,
+                                     tiempo_de_demora, determinador, camino)
+
+
 def onlycosajaru(graph):
     return model.onlycosajaru(graph)
