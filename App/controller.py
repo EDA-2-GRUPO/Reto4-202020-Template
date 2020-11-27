@@ -30,7 +30,9 @@ from App import model
 import csv
 import os
 from timeit import default_timer as dt
-
+from DISClib.ADT import map as m
+from DISClib.DataStructures import listiterator as it
+from DISClib.ADT import list as lt
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 Existen algunas operaciones en las que se necesita invocar
@@ -104,16 +106,31 @@ def clusters(graph,sta1,sta2):
     
     return model.numSCC(graph,sta1,sta2)
 def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
-    tiempo_de_demora=int(tiempo_de_demora)
-    mint=int(mint)
-    maxt=int(maxt)
+    tiempo_de_demora=int(tiempo_de_demora)*60
+    mint=int(mint)*60
+    maxt=int(maxt)*60
     nextvertex=0
     lista_caminos=0
     Total_camino=0
-    determinador=0
-    camino=0
+    determinador=False
+    camino=""
     scc=graph["scc"]
     graph=graph["connections"]
     return model.calcular_los_ciclos(graph,scc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino)
 def onlycosajaru(graph):
     return model.onlycosajaru(graph)
+def rq6(analyzer,ll1, ll2):
+    lista=analyzer["stops"]
+    grafo=analyzer["connections"]
+    map_vet_long_lat=analyzer["vertex"]
+    lat1=model.cambiar_a_formato(ll1,0)
+    long1=model.cambiar_a_formato(ll1,1)
+    lat2=model.cambiar_a_formato(ll2,0)
+    long2=model.cambiar_a_formato(ll2,1)
+    mapa_mas_cercano=model.hallar_cercanos_a_dos(lista, map_vet_long_lat,lat1,long1,lat2,long2)
+    inicio=m.get(mapa_mas_cercano,"Vertice1")["value"]
+    final=m.get(mapa_mas_cercano,"Vertice2")["value"]
+    lista_cami_tiempo_o_None=model.only_dijsktra(grafo,inicio,final)
+    if lista_cami_tiempo_o_None==None:
+        lista_cami_tiempo_o_None= "no hay un camino a esa estacion"
+    return lista_cami_tiempo_o_None

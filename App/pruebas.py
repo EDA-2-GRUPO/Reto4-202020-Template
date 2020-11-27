@@ -1,11 +1,6 @@
-
-def de(x,y,w):
-    print(x,y,w,1)
-    if w!=2:
-     x-=1
-     y-=1
-     w+=1
-     de(x,y,w)
-     print(x,y,w,2)
-    return(x,y)
-de(10,2,0)
+sap,sop,sep,simp=2,1,3,4
+import sys
+import config
+from DISClib.ADT import list as lt
+assert config
+print(type("hello")==str)
