@@ -135,45 +135,42 @@ def addConnection(analyzer, origin, destination, distance):
 # ==============================
 # Funciones de consulta
 # ==============================
-def calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino):
-    print(Total_camino)
-    if determinador==False:
-     lista_caminos=lt.newList("ARRAY_LIST")
-     camino=lt.newList("ARRAY_LIST") 
-     newvertex= inicialvertex
-     determinador =True
-    else:
-     newvertex=nextvertex
-    lt.addLast(camino, newvertex)
-    if newvertex!=inicialvertex or (Total_camino==0):#1)parte, entrada y por ende no hay que retornar nada, pero se intenta asegurar 
+def calcular_los_ciclos(graph,sc,inicialvertex, netvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,determinador,camino):
+      if determinador==False:
+        lista_caminos=lt.newList("ARRAY_LIST")
+        camino=lt.newList("ARRAY_LIST") 
+        newvertex= inicialvertex
+      else:
+        newvertex=netvertex
+      lt.addLast(camino, newvertex)
       lista_vertices=gr.adjacents(graph, newvertex)
       iterador_1=it.newIterator(lista_vertices) #iterador de la lista de vertices 
       while it.hasNext(iterador_1):
           nextvertex=it.next(iterador_1) #siguinte vertice 
-          if (scc.stronglyConnected(sc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
-              print(inicialvertex, next)
-              print(inicialvertex==nextvertex)
+          if (inicialvertex==nextvertex):
+             Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
+             Total_camino+=Arco+tiempo_de_demora
+             if maxt>= Total_camino>=mint:
+                 datos=lt.newList("ARRAY_LIST")
+                 lt.addLast(datos,netvertex) #si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
+                 lt.addLast(datos,Total_camino)
+                 lt.addLast(lista_caminos, datos)
+             Total_camino-=Arco+tiempo_de_demora
+          elif (scc.stronglyConnected(sc, inicialvertex, nextvertex)): #3)parte #para que un vertice sea analizable tienen que estar en el mismo cluster
               Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
               Total_camino+=Arco+tiempo_de_demora #se suma el peso del arco al tiempo general y tambien el tiempo de demora
-              if Total_camino<=maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el proceso
+              if Total_camino<maxt: #4)parte si al sumarlo el tiempo se pasa del maximo se cancela el proceso
                   funcion=calcular_los_ciclos(graph,sc,inicialvertex, nextvertex, lista_caminos, Total_camino,mint,maxt,tiempo_de_demora,True,camino)
-                  if funcion!=None: #actualiza la lista de caminos
-                     lista_caminos=funcion
-              else:#5parte #se elimina el tiempo de reconocimiento sumado con el vertice del camino
-                Total_camino-=Arco+tiempo_de_demora
-      if newvertex==inicialvertex:#6a #En esta parte se termina el ciclo while en esta recursion y nos aseguramos que el while no halla termiando para el vertice de inicio
-          return lista_caminos #si si es la misma ya podemos retornar el resultado
-      return lista_caminos #####REVISAR CAMNBIOOOOO #Cambio correcto
-    else:#8a #en este caso hay dos opciones 1) el algoritmo llego a el fin de ciclo (correccion: la segunda es imposible) 2)ya no hay más caminos por recorrer y por tanto se devolvio
-         Arco=gr.getEdge(graph, newvertex,nextvertex)["weight"]
-         Total_camino+=Arco+tiempo_de_demora
-         if ((Total_camino>=mint) and (Total_camino<=maxt)):#dado que ya finalizo el camino  y sabemos que el Total no se pasa del limite max ahora dado que termino se comprueba si es menor que el min
-           datos=lt.newList()
-           lt.addLast(datos,camino)#si si esta definitivamente en el intervalo se añade el camino a la lista de camninos
-           lt.addLast(datos,Total_camino)
-           lt.addLast(lista_caminos, datos)
-           return lista_caminos
-         return None
+                  lista_caminos=funcion
+              Total_camino-=Arco+tiempo_de_demora 
+      return lista_caminos
+def esta(lista, newvertex):
+    iterador_1=it.newIterator(lista) #iterador de la lista de vertices 
+    while it.hasNext(iterador_1):
+          nextvertex=it.next(iterador_1)
+          if nextvertex==newvertex:
+             return True
+    return False
 def numSCC(graph,sta1,sta2):
     """"Entrega en una lista en primera posicion el numero de clusters 
     y de segundas el bool de si las 2 estaciones estan en el mismo

@@ -109,7 +109,7 @@ def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
     tiempo_de_demora=int(tiempo_de_demora)*60
     mint=int(mint)*60
     maxt=int(maxt)*60
-    nextvertex=0
+    nextvertex=inicialvertex
     lista_caminos=0
     Total_camino=0
     determinador=False
