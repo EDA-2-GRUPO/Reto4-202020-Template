@@ -139,7 +139,7 @@ def optionSeven(cont):
 def optionFive(cont):
     rango_edad=input("Rango de edad del turista: ")
     controller.rq5(cont,rango_edad)
-def optionrTree(cont)
+def optionrTree(cont):
     ccontroller.rq3(cont)
 def printMenu():
     print("\n")
