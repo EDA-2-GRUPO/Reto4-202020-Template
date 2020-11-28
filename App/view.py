@@ -89,7 +89,7 @@ def optionTwo(cont):
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
     return num_caminos_con
 
-def optionthree():
+def optionthree(cont):
     estacion1=input("estacion1")
     estacion2=input("estacion2")
     t1 = perf_counter() 
@@ -98,7 +98,7 @@ def optionthree():
     print("tiempo de carga:", t2 - t1)
     Printop3(bol_num)
 
-def optionfour():
+def optionfour(cont):
     tiempo_ini=input("ingrese tiempo inicial: ")
     tiempo_fin=input("ingrese tiempo final: ")
     station_id=input("ingrese la estacion de inicio: ")
@@ -136,6 +136,11 @@ def optionSeven(cont):
                 while it.hasNext(iteradort): 
                     nextt=it.next(iteradort)
                     print(nextt)
+def optionFive(cont):
+    rango_edad=input("Rango de edad del turista: ")
+    controller.rq5(cont,rango_edad)
+def optionrTree(cont)
+    ccontroller.rq3(cont)
 def printMenu():
     print("\n")
     print("*******************************************")
@@ -162,15 +167,15 @@ while True:
         ncont= optionTwo(cont)
         cont["scc"]=ncont
     elif int(inputs[0]) == 1:
-        optionthree()
+        optionthree(cont)
         
 
     elif int(inputs[0]) == 2:
-        optionfour()
+        optionfour(cont)
 
 
     elif int(inputs[0]) == 3:
-        print("d")
+        optionrTree(cont)
 
     elif int(inputs[0]) == 6:
         optionSeven(cont)
@@ -178,8 +183,7 @@ while True:
         
 
     elif int(inputs[0]) == 5:
-        
-        print("Tiempo de ejecución: " + str(executiontime))
+        optionFive(cont)
     elif int(inputs[0]) == 6:
         optionSeven()
     else:

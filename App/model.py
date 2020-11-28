@@ -119,7 +119,7 @@ def addmapvertex(analyzer,origin,latitud,longitud):
     """
     if not m.contains(analyzer["vertex"],origin):
       m.put(analyzer["vertex"],origin,str(latitud)+","+str(longitud))
-      lt.addLast(analyzer["stops"],origin)
+      lt.addLast(analyzer["stopsl"],origin)
       return analyzer
 
 def addStation(analyzer, stopid):

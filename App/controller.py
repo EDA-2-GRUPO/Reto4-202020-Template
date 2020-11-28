@@ -124,7 +124,7 @@ def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
 def onlycosajaru(graph):
     return model.onlycosajaru(graph)
 def rq6(analyzer,ll1, ll2):
-    lista=analyzer["stops"]
+    lista=analyzer["stopsl"]
     grafo=analyzer["connections"]
     map_vet_long_lat=analyzer["vertex"]
     lat1=model.cambiar_a_formato(ll1,0)
@@ -138,3 +138,8 @@ def rq6(analyzer,ll1, ll2):
     if lista_cami_tiempo_o_None==None:
         lista_cami_tiempo_o_None= "no hay un camino a esa estacion"
     return lista_cami_tiempo_o_None
+def rq5(cont,rango):
+    return model.Recomendar_Rutas(cont,rango)
+
+def rq3(cont):
+    return model.Top_llegada_salida(cont)
