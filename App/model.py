@@ -29,14 +29,17 @@ from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Sorting.insertionsort import insertionSort
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+
 assert config
 
 """
 En este archivo definimos los TADs que vamos a usar y las operaciones
 de creacion y consulta sobre las estructuras de datos.
 """
+
 
 # -----------------------------------------------------
 #                       API
@@ -53,28 +56,28 @@ def newAnalyzer():
    vertex: Mapa de los vertices segun lat y long
     """
     try:
-        citibike = {
-                    'stops': None,
-                    'connections': None,
-                    'components': None,
-                    'paths': None,
-                    "num":0,
-                    "scc":None,
-                    "vertex":None
-                    }
-
-        citibike['stops'] = lt.newList("ARRAY_LIST")
-
-        citibike['connections'] = gr.newGraph(datastructure='ADJ_LIST',
-                                              directed=True,
-                                              size=14000,
-                                              comparefunction=compareStopIds)
-        citibike["vertex"] = m.newMap(numelements=10000, 
+        citibike = {'stops': m.newMap(numelements=14000,
+                                      maptype='PROBING',
+                                      comparefunction=compareStopIds),
+                    'connections': gr.newGraph(datastructure='ADJ_LIST',
+                                               directed=True,
+                                               size=14000,
+                                               comparefunction=compareStopIds), 'components': None, 'paths': None,
+                    'Edades_Salida': m.newMap(numelements=10000,
+                                               maptype='CHAINING',
+                                               comparefunction=compareStopIds),
+                    'Edades_LLegada': m.newMap(numelements=10000,
+                                               maptype='CHAINING',
+                                               comparefunction=compareStopIds),
+                    "num": 0, "scc": None,
+                    "vertex" : m.newMap(numelements=10000, 
                                        maptype="CHAINING", 
-                                       comparefunction=compareStopIds)
+                                       comparefunction=compareStopIds),
+                    'stopsl' :lt.newList("ARRAY_LIST")}
         return citibike
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
+
 
 # Funciones para agregar informacion al grafo
 def addStopConnection(citibike, viaje):
@@ -89,16 +92,22 @@ def addStopConnection(citibike, viaje):
 
     Si la estacion sirve otra ruta, se tiene: 75009-101
     """
-    
+
     try:
-        origin =viaje["start station id"]
-        destination= viaje["end station id"]
-        duration =int(viaje["tripduration"])
+
+        origin = viaje["start station id"]
+        destination = viaje["end station id"]
+        duration = int(viaje["tripduration"])
+        range_edad = clasificar(int(viaje['birth year']), 2018)
         lat=float(viaje["start station latitude"])
         longt=float(viaje["start station longitude"])
         addmapvertex(citibike,origin,lat,longt)
+        addmapEdad(citibike['Edades_LLegada'], destination, range_edad)
+        addmapEdad(citibike['Edades_Salida'], origin, range_edad)
+
         addStation(citibike, origin)
         addStation(citibike, destination)
+
         addConnection(citibike, origin, destination, duration)
         return citibike
     except Exception as exp:
@@ -124,6 +133,7 @@ def addStation(analyzer, stopid):
     except Exception as exp:
         error.reraise(exp, 'model:addstop')
 
+
 def addConnection(analyzer, origin, destination, distance):
     """
     Adiciona un arco entre dos estaciones
@@ -132,6 +142,24 @@ def addConnection(analyzer, origin, destination, distance):
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     return analyzer
+
+
+def addmapEdad(Emap, station, range_edad):
+    estation_map = m.get(Emap, station)
+    if estation_map is None:
+        mapa_edades = m.newMap(5, maptype='CHAINING')
+        m.put(estation_map, station, mapa_edades)
+    else:
+        mapa_edades = estation_map['value']
+    edad_entry = m.get(mapa_edades, range_edad)
+
+    if edad_entry is None:
+        m.put(mapa_edades, range_edad, 1)
+    else:
+        edad_entry['value'] += 1
+
+    return Emap
+
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -171,17 +199,88 @@ def esta(lista, newvertex):
           if nextvertex==newvertex:
              return True
     return False
-def numSCC(graph,sta1,sta2):
+
+def Top_llegada_salida(graph):
+    list_ver = gr.vertices(graph)
+    top_llegada = lt.newList('ARRAY_LIST')
+    top_salida = lt.newList('ARRAY_LIST')
+    top_inutilizada = lt.newList('ARRAY_LIST')
+    iterador_vert = it.newIterator(list_ver)
+    for _ in range(lt.size(list_ver)):
+        vertex = it.next(iterador_vert)
+        n_arc_llegada = gr.outdegree(graph, vertex)
+        n_arc_salida = gr.indegree(graph, vertex)
+        lt.addLast(top_llegada, {'vertex': vertex, 'num': n_arc_llegada})
+        lt.addLast(top_salida, {'vertex': vertex, 'num': n_arc_salida})
+        lt.addLast(top_salida, {'vertex': vertex, 'num': n_arc_salida + n_arc_salida})
+        insertionSort(top_llegada, order_aux_max)
+        insertionSort(top_salida, order_aux_max)
+        insertionSort(top_inutilizada, order_aux_min)
+        if lt.size(top_llegada) > 3:
+            lt.removeLast(top_salida)
+            lt.removeLast(top_llegada)
+            lt.removeLast(top_inutilizada)
+    return {'top_llegada': top_llegada, 'top_salida': top_salida, 'top_inutilizada': top_inutilizada}
+
+
+def Recomendar_Rutas(analyzer, range_edad):
+    mapa_llegada = analyzer['Edades_LLegada']
+    mapa_salida = analyzer['Edades_Salida']
+    max_l, max_s = 0, 0
+    rec_l, rec_s = None, None
+    keys_l, keys_s = m.keySet(mapa_llegada), m.keySet(mapa_salida)
+    iter_l, iter_s = it.newIterator(keys_l), it.newIterator(keys_s)
+    for _ in range(lt.size(keys_l)):
+        estacion = it.next(iter_l)
+        estacion_map = m.get(mapa_llegada, estacion)['value']
+        edad_entry = m.get(estacion_map, range_edad)
+        if edad_entry is not None:
+            act_n = edad_entry['value']
+            if act_n > max_l:
+                max_l = act_n
+                rec_l = estacion
+    for _ in range(lt.size(keys_s)):
+        estacion = it.next(iter_s)
+        estacion_map = m.get(mapa_salida, estacion)['value']
+        edad_entry = m.get(estacion_map, range_edad)
+        if edad_entry is not None:
+            act_n = edad_entry['value']
+            if act_n > max_s:
+                max_s = act_n
+                rec_s = estacion
+    search = djk.Dijkstra(analyzer['conections'], rec_s)
+    camino = None
+    if djk.hasPathTo(search, rec_l):
+        camino = djk.pathTo(search, rec_l)
+    return camino
+
+
+def order_aux_max(el1, el2):
+    if el1['num'] < el2['num']:
+        return 0
+    else:
+        return 1
+
+
+def order_aux_min(el1, el2):
+    if el1['num'] < el2['num']:
+        return 1
+    else:
+        return 0
+
+
+def numSCC(graph, sta1, sta2):
+>>>>>>> origin/j.diazi
     """"Entrega en una lista en primera posicion el numero de clusters 
     y de segundas el bool de si las 2 estaciones estan en el mismo
     cluster"""
-    lista_final=lt.newList()
+    lista_final = lt.newList()
     sc = graph["scc"]
-    num_comp=scc.connectedComponents(sc)
-    if sta1!=None: # se aplica cuando se quiere solo sacar los componentes 
-     esta=sameCC(sc,sta1,sta2) # determina si estan en el mismo cluster o no bool
-     lt.addLast(lista_final,esta)
-    lt.addLast(lista_final,num_comp)
+    num_comp = scc.connectedComponents(sc)
+    if sta1 != None:  # se aplica cuando se quiere solo sacar los componentes
+        esta = sameCC(sc, sta1, sta2)  # determina si estan en el mismo cluster o no bool
+        lt.addLast(lista_final, esta)
+    lt.addLast(lista_final, num_comp)
     return lista_final
 def hallar_cercanos_a_dos(lista, map,lat1,long1,lat2,long2):
     """
@@ -245,19 +344,25 @@ def sameCC(sc, station1, station2):
     cluster """
     return scc.stronglyConnected(sc, station1, station2)
 
+
 def totalStops(analyzer):
     """
     Retorna el total de estaciones (vertices) del grafo
     """
     return gr.numVertices(analyzer['connections'])
 
+
 def totalConnections(analyzer):
     """
     Retorna el total arcos del grafo
     """
     return gr.numEdges(analyzer['connections'])
+
+
 def onlycosajaru(graph):
     return scc.KosarajuSCC(graph['connections'])
+
+
 # ==============================
 # Funciones Helper
 # ==============================
@@ -276,3 +381,21 @@ def compareStopIds(stop, keyvaluestop):
         return 1
     else:
         return -1
+
+
+def clasificar(nacimiento, anio_ac) -> str:
+    edad = anio_ac - nacimiento
+    if edad <= 10:
+        return '0-10'
+    elif 11 <= edad <= 20:
+        return '11-20'
+    elif 21 <= edad <= 30:
+        return '21-30'
+    elif 31 <= edad <= 40:
+        return '31-40'
+    elif 41 <= edad <= 50:
+        return '41-50'
+    elif 51 <= edad <= 60:
+        return '11-20'
+    else:
+        return '60+'

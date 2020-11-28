@@ -26,7 +26,7 @@
 
 import config as cf
 # from App.view import information as inf
-from App import model 
+from App import model
 import csv
 import os
 from timeit import default_timer as dt
@@ -40,6 +40,7 @@ el modelo varias veces o integrar varias de las respuestas
 del modelo en una sola respuesta.  Esta responsabilidad
 recae sobre el controlador.
 """
+
 
 # ___________________________________________________
 #  Inicializacion del catalogo
@@ -58,19 +59,20 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 def loadTrips(citibike):
-    temptot= 0
-    w=0
+    temptot = 0
+    w = 0
     for filename in os.listdir(cf.data_dir):
-      if w!=2:
-        if filename.endswith('.csv'):
-            print('Cargando archivo: ' + filename)
-            ini=dt()
-            loadServices(citibike, filename)
-            fin=dt()
-            time=fin-ini
-            temptot+=time
-            w+=1
+        if w != 2:
+            if filename.endswith('.csv'):
+                print('Cargando archivo: ' + filename)
+                ini = dt()
+                loadServices(citibike, filename)
+                fin = dt()
+                time = fin - ini
+                temptot += time
+                w += 1
     return citibike
+
 
 def loadServices(analyzer, servicesfile):
     """
@@ -85,9 +87,11 @@ def loadServices(analyzer, servicesfile):
     input_file = csv.DictReader(open(servicesfile, encoding="utf-8"),
                                 delimiter=",")
     for service in input_file:
-        analyzer["num"]+=1
+        analyzer["num"] += 1
         model.addStopConnection(analyzer, service)
     return analyzer
+
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
@@ -96,6 +100,7 @@ def totalStops(analyzer):
     Total de paradas de autobus
     """
     return model.totalStops(analyzer)
+
 
 def totalConnections(analyzer):
     """
