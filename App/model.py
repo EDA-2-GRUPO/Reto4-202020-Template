@@ -62,6 +62,13 @@ def newAnalyzer():
                                                directed=True,
                                                size=14000,
                                                comparefunction=compareStopIds), 'components': None, 'paths': None,
+                    'Edades_Salida': m.newMap(numelements=10000,
+                                               maptype='CHAINING',
+                                               comparefunction=compareStopIds),
+                    'Edades_LLegada': m.newMap(numelements=10000,
+                                               maptype='CHAINING',
+                                               comparefunction=compareStopIds),
+
                     "num": 0, "scc": None}
 
         return citibike
@@ -87,8 +94,12 @@ def addStopConnection(citibike, viaje):
         origin = viaje["start station id"]
         destination = viaje["end station id"]
         duration = int(viaje["tripduration"])
+        range_edad = clasificar(int(viaje['birth year']), 2018)
+        addmapEdad(citibike['Edades_LLegada'], destination, range_edad)
+        addmapEdad(citibike['Edades_Salida'], origin, range_edad)
         addStation(citibike, origin)
         addStation(citibike, destination)
+
         addConnection(citibike, origin, destination, duration)
         return citibike
     except Exception as exp:
@@ -115,6 +126,24 @@ def addConnection(analyzer, origin, destination, distance):
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     return analyzer
+
+
+def addmapEdad(Emap, station, range_edad):
+    estation_map = m.get(Emap, station)
+    if estation_map is None:
+        mapa_edades = m.newMap(5, maptype='CHAINING')
+        m.put(estation_map, station, mapa_edades)
+    else:
+        mapa_edades = estation_map['value']
+    edad_entry = m.get(mapa_edades, range_edad)
+
+    if edad_entry is None:
+        m.put(mapa_edades, range_edad, 1)
+    else:
+        edad_entry['value'] += 1
+
+    return Emap
+
 
 
 # ==============================
@@ -186,6 +215,38 @@ def Top_llegada_salida(graph):
             lt.removeLast(top_llegada)
             lt.removeLast(top_inutilizada)
     return {'top_llegada': top_llegada, 'top_salida': top_salida, 'top_inutilizada': top_inutilizada}
+
+
+def Recomendar_Rutas(analyzer, range_edad):
+    mapa_llegada = analyzer['Edades_LLegada']
+    mapa_salida = analyzer['Edades_Salida']
+    max_l, max_s = 0, 0
+    rec_l, rec_s = None, None
+    keys_l, keys_s = m.keySet(mapa_llegada), m.keySet(mapa_salida)
+    iter_l, iter_s = it.newIterator(keys_l), it.newIterator(keys_s)
+    for _ in range(lt.size(keys_l)):
+        estacion = it.next(iter_l)
+        estacion_map = m.get(mapa_llegada, estacion)['value']
+        edad_entry = m.get(estacion_map, range_edad)
+        if edad_entry is not None:
+            act_n = edad_entry['value']
+            if act_n > max_l:
+                max_l = act_n
+                rec_l = estacion
+    for _ in range(lt.size(keys_s)):
+        estacion = it.next(iter_s)
+        estacion_map = m.get(mapa_salida, estacion)['value']
+        edad_entry = m.get(estacion_map, range_edad)
+        if edad_entry is not None:
+            act_n = edad_entry['value']
+            if act_n > max_s:
+                max_s = act_n
+                rec_s = estacion
+    search = djk.Dijkstra(analyzer['conections'], rec_s)
+    camino = None
+    if djk.hasPathTo(search, rec_l):
+        camino = djk.pathTo(search, rec_l)
+    return camino
 
 
 def order_aux_max(el1, el2):
@@ -260,3 +321,21 @@ def compareStopIds(stop, keyvaluestop):
         return 1
     else:
         return -1
+
+
+def clasificar(nacimiento, anio_ac) -> str:
+    edad = anio_ac - nacimiento
+    if edad <= 10:
+        return '0-10'
+    elif 11 <= edad <= 20:
+        return '11-20'
+    elif 21 <= edad <= 30:
+        return '21-30'
+    elif 31 <= edad <= 40:
+        return '31-40'
+    elif 41 <= edad <= 50:
+        return '41-50'
+    elif 51 <= edad <= 60:
+        return '11-20'
+    else:
+        return '60+'
