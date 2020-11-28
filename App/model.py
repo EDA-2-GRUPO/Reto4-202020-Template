@@ -147,8 +147,8 @@ def addConnection(analyzer, origin, destination, distance):
 def addmapEdad(Emap, station, range_edad):
     estation_map = m.get(Emap, station)
     if estation_map is None:
-        mapa_edades = m.newMap(5, maptype='CHAINING')
-        m.put(estation_map, station, mapa_edades)
+        mapa_edades = m.newMap(5, maptype='CHAINING', comparefunction=compareStopIds)
+        m.put(Emap, station, mapa_edades)
     else:
         mapa_edades = estation_map['value']
     edad_entry = m.get(mapa_edades, range_edad)
@@ -200,7 +200,8 @@ def esta(lista, newvertex):
              return True
     return False
 
-def Top_llegada_salida(graph):
+def Top_llegada_salida(cont):
+    graph = cont['connections']
     list_ver = gr.vertices(graph)
     top_llegada = lt.newList('ARRAY_LIST')
     top_salida = lt.newList('ARRAY_LIST')
@@ -212,7 +213,7 @@ def Top_llegada_salida(graph):
         n_arc_salida = gr.indegree(graph, vertex)
         lt.addLast(top_llegada, {'vertex': vertex, 'num': n_arc_llegada})
         lt.addLast(top_salida, {'vertex': vertex, 'num': n_arc_salida})
-        lt.addLast(top_salida, {'vertex': vertex, 'num': n_arc_salida + n_arc_salida})
+        lt.addLast(top_inutilizada, {'vertex': vertex, 'num': n_arc_salida + n_arc_salida})
         insertionSort(top_llegada, order_aux_max)
         insertionSort(top_salida, order_aux_max)
         insertionSort(top_inutilizada, order_aux_min)
@@ -248,7 +249,7 @@ def Recomendar_Rutas(analyzer, range_edad):
             if act_n > max_s:
                 max_s = act_n
                 rec_s = estacion
-    search = djk.Dijkstra(analyzer['conections'], rec_s)
+    search = djk.Dijkstra(analyzer['connections'], rec_s)
     camino = None
     if djk.hasPathTo(search, rec_l):
         camino = djk.pathTo(search, rec_l)
