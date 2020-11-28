@@ -270,7 +270,6 @@ def order_aux_min(el1, el2):
 
 
 def numSCC(graph, sta1, sta2):
->>>>>>> origin/j.diazi
     """"Entrega en una lista en primera posicion el numero de clusters 
     y de segundas el bool de si las 2 estaciones estan en el mismo
     cluster"""

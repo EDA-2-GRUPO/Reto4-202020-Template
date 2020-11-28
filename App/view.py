@@ -183,13 +183,8 @@ while True:
 
     elif int(inputs[0]) == 6:
         optionSeven(cont)
-        
-        
-
     elif int(inputs[0]) == 5:
         optionFive(cont)
-    elif int(inputs[0]) == 6:
-        optionSeven()
     else:
         sys.exit(0)
 sys.exit(0)
