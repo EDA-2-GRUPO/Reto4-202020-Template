@@ -103,7 +103,6 @@ def totalConnections(analyzer):
     """
     return model.totalConnections(analyzer)
 def clusters(graph,sta1,sta2):
-    
     return model.numSCC(graph,sta1,sta2)
 def funcion2(graph,inicialvertex,mint,maxt,tiempo_de_demora):
     tiempo_de_demora=int(tiempo_de_demora)*60

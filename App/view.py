@@ -132,7 +132,7 @@ def optionSeven(cont):
               print(nextr)
           else:
                 iteradort=it.newIterator(nextr)
-                print("caamino")
+                print("camino")
                 while it.hasNext(iteradort): 
                     nextt=it.next(iteradort)
                     print(nextt)
