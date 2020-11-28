@@ -138,9 +138,13 @@ def optionSeven(cont):
                     print(nextt)
 def optionFive(cont):
     rango_edad=input("Rango de edad del turista: ")
-    controller.rq5(cont,rango_edad)
+    Camino= controller.rq5(cont,rango_edad)
+    print(Camino)
 def optionrTree(cont):
-    controller.rq3(cont)
+    allt =controller.rq3(cont)
+    print("top_llegada :",allt["top_llegada"])
+    print("Top Salida :",allt['top_salida'])
+    print("top_inutilizada :",allt["top_inutilizada"])
 def printMenu():
     print("\n")
     print("*******************************************")
