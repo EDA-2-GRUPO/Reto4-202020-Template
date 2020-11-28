@@ -104,10 +104,19 @@ def optionfour():
     station_id=input("ingrese la estacion de inicio: ")
     tiempo_de_demora=input("Cuanto se demora en analizar los alrededores?: ")
     lista_caminos=controller.funcion2(cont,station_id,tiempo_ini,tiempo_fin,tiempo_de_demora)
-    print(lt.size(lista_caminos))
-    # iterador_lista=it.newIterator(lista_caminos)
-    # while it.hasNext(iterador_lista):
-    #     next=
+    iterador_1=it.newIterator(lista_caminos) #iterador de la lista de vertices 
+    print("primera estacion:",station_id)
+    while it.hasNext(iterador_1):
+          nextvertex=it.next(iterador_1) #siguinte vertice 
+          iterador_2=it.newIterator(nextvertex) #iterador de la lista de vertices 
+          n=0
+          while it.hasNext(iterador_2):
+            if n==0:
+                print("ultima estacion")
+            elif n==1:
+                print("tiempo estimado")
+            nextvertex=it.next(iterador_2)
+            print(nextvertex)
 
 def optionSeven(cont):
     lat_lon1=input("ingrese la latitud y lontgitud (separados por comas) 1 Ej:1000,-1000: ")
